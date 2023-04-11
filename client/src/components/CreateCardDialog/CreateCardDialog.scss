@@ -1,0 +1,25 @@
+.createCardDialog{
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0,0,0,0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.5s;
+}
+.createCardDialog__active{
+  opacity: 1;
+  pointer-events: all;
+}
+.createCardDialog__content{
+  padding: 20px;
+  border: 10px;
+  background-color: white;
+  height: 200px;
+  width: 400px;
+}

@@ -5,6 +5,10 @@ class CardController {
         const {user_id, device_id, name, room_id, type} = req.body
         const newCard = await db.query(`INSERT INTO card (user_id, device_id, name, room_id, type) values ($1, $2, $3, $4, $5) RETURNING *`,
             [user_id, device_id, name, room_id, type])
+        res.set({
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Credentials" : true
+        })
         res.json(newCard.rows[0])
     }
     async getCards(req, res) {
@@ -14,7 +18,6 @@ class CardController {
             "Access-Control-Allow-Credentials" : true
         })
         res.json(cards.rows)
-        console.log(cards.rows)
     }
     async getOneCard(req, res) {
         const id = req.params.id
