@@ -1,5 +1,6 @@
 const Router = require('express')
 const router = new Router()
+
 const userRouter = require('./user.routes')
 const deviceRouter = require('./device.routes')
 const cardRouter = require('./card.routes')

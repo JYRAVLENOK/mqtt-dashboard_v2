@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {Context} from "../../index";
 import {createCard} from "../../http/cardAPI";
-import {CardStore} from "../../store/CardStore"
+//import {CardStore} from "../../store/CardStore"
 import {Form} from "react-bootstrap"
 
 const CreateCard = () => {
@@ -47,9 +47,9 @@ const CreateCard = () => {
         console.log(formData)
 
         // console.log(data)
-        let json = JSON.stringify(data)
-        // console.log(json)
-        createCard(formData).then(data => CardStore.setCard(data))
+        // let json = JSON.stringify(data)
+        // // console.log(json)
+        // createCard(formData).then(data => CardStore.setCard(data))
     }
 
     return (
