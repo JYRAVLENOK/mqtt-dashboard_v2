@@ -12,6 +12,7 @@ import CreateCard from "./pages/createCard/CreateCard";
 import InfoCard from "./pages/infoCard/InfoCard";
 import Registration from "./pages/registration/registration";
 import CreateDevice from "./pages/createDevice/CreateDevice";
+import CreateDevice2 from "./components/modals/createDevice";
 
 export const authRoutes = [
     {
@@ -26,9 +27,13 @@ export const authRoutes = [
         path: CARD_CREATE_ROUTE,
         Component: CreateCard
     },
+    // {
+    //     path: DEVICE_CREATE_ROUTE,
+    //     Component: CreateDevice
+    // }
     {
         path: DEVICE_CREATE_ROUTE,
-        Component: CreateDevice
+        Component: CreateDevice2
     }
 ]
 

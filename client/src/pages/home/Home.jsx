@@ -12,6 +12,8 @@ import {CARD_CREATE_ROUTE, DEVICE_CREATE_ROUTE} from "../../utils/consts";
 import {fetchCards} from "../../http/cardAPI";
 import {fetchDevices} from "../../http/deviceAPI";
 import {fetchRooms} from "../../http/roomAPI";
+import {Button} from "react-bootstrap";
+import CreateDevice2 from "../../components/modals/createDevice";
 
 const Home = observer(() => {
     const {card} = useContext(Context)
@@ -24,15 +26,15 @@ const Home = observer(() => {
         fetchRooms().then(data => room.setRooms(data))
     }, [])
 
-    const [addCard, setAddCard] = useState(false)
-    const [addDevice, setAddDevice] = useState(false)
+    const [cardVisible, setCardVisible] = useState(false)
+    const [deviceVisible, setDeviceVisible] = useState(false)
 
-    if (addCard) {
-        return <Navigate to={CARD_CREATE_ROUTE}/>;
-    }
-    if (addDevice) {
-        return <Navigate to={DEVICE_CREATE_ROUTE}/>;
-    }
+    // if (addCard) {
+    //     return <Navigate to={CARD_CREATE_ROUTE}/>;
+    // }
+    // if (addDevice) {
+    //     return <Navigate to={DEVICE_CREATE_ROUTE}/>;
+    // }
 
     return (
         <div className="home">
@@ -40,8 +42,11 @@ const Home = observer(() => {
             <div className="homeContainer">
                 <Navbar/>
                 <div className="addBar">
-                    <button type='submit' className = "buttonAdd" onClick={() => setAddCard(true)}>Добавить карточку</button>
-                    <button type='submit' className = "buttonAdd" onClick={() => setAddDevice(true)}>Добавить устройство</button>
+                    <Button type='submit' className = "buttonAdd">Добавить карточку</Button>
+                    <Button type='submit' className = "buttonAdd" onClick={() => {setDeviceVisible(true)}}>Добавить устройство</Button>
+                    <CreateDevice2 show={deviceVisible} onHide={() => {
+                        setDeviceVisible(false)
+                    }}/>
                 </div>
                 <WidgetList/>
                 <div className="charts">
