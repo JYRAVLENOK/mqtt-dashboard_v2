@@ -5,8 +5,10 @@ import {useNavigate} from "react-router-dom";
 import {useContext} from "react";
 import {Context} from "../../index";
 import {LOGIN_ROUTE} from "../../utils/consts";
+import {Button} from "react-bootstrap";
+import {observer} from "mobx-react-lite";
 
-const Navbar = () => {
+const Navbar = observer(() => {
     const history = useNavigate()
     const {user} = useContext(Context)
 
@@ -16,11 +18,17 @@ const Navbar = () => {
         localStorage.removeItem('token')
         history(LOGIN_ROUTE)
     }
+
     return (
         <div className="navbar">
             <div className="wrapper">
                 <div className="search">
-                    <input type="text" placeholder="Поиск..." />
+                    <input
+                        type="text"
+                        placeholder="Поиск..."
+                        // value={value}
+                        // onChange={onChange()}
+                    />
                     <SearchOutlinedIcon />
                 </div>
                 <div className="items">
@@ -29,12 +37,12 @@ const Navbar = () => {
                         <div className="counter">1</div>
                     </div>
                     <div>
-                        <button onClick={logOut}>Выйти</button>
+                        <Button variant={"outline-danger"} onClick={logOut}>Выйти</Button>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
+});
 
 export default Navbar;

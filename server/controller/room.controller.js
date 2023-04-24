@@ -26,6 +26,7 @@ class RoomController{
                 where: {id}
             }
         )
+        return res.json(room)
     }
     async updateRoom(req,res){
         // const {id, name} = req.body

@@ -1,5 +1,5 @@
 import axios from "axios";
-axios.defaults.headers.common['Accept'] = 'application/json'
+axios.defaults.headers.common['Content-Type'] = 'application/json'
 const $host = axios.create({
     baseURL: process.env.REACT_APP_API_URL
 })
@@ -10,7 +10,7 @@ const $authHost = axios.create({
 
 const authInterceptor = config => {
     config.headers.authorization = `Bearer ${localStorage.getItem('token')}`
-    // config.headers.common['Accept'] = 'application.json'
+    console.log(config.headers.authorization)
     return config
 }
 

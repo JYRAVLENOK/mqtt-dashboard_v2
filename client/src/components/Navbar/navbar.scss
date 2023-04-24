@@ -2,6 +2,7 @@
   height: 60px;
   border-bottom: 0.5px solid rgb(231, 228, 228);
   display: flex;
+  padding: 0;
   align-items: center;
   font-size: 14px;
   //font-family: Calibri;
@@ -9,7 +10,7 @@
 
   .wrapper {
     width: 100%;
-    padding: 20px;
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -21,10 +22,11 @@
       border: 0.5px solid lightgray;
       border-radius: 10px;
       //background-color: #7451f8;
-      padding: 3px;
+      padding: 10px;
 
       input {
         border: none;
+        margin-top: 20px;
         outline: none;
         background: transparent;
 

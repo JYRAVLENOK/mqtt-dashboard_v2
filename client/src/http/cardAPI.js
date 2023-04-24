@@ -1,10 +1,5 @@
 import {$host} from "./index"
 
-const options = {
-    headers: {
-        'Content-Type': 'application/json'
-    }
-}
 export const createCard = async (card) => {
     const {data} = await $host.post('api/card/create', card, {
         headers: {

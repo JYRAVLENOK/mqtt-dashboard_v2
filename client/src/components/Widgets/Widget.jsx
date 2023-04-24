@@ -7,16 +7,18 @@ import {CARD_ROUTE} from "../../utils/consts";
 import {NavLink, useNavigate} from "react-router-dom";
 import {useContext} from "react";
 import {Context} from "../../index";
+import {observer} from "mobx-react-lite";
 
 var mqtt = require("mqtt")
 
-const Widget = ({ card }) => {
+const Widget = observer(({ card }) => {
     const history = useNavigate()
     const {device} = useContext(Context)
 
     let data;
     // let type = device._devices[card.device_id]
     let type = device._devices.find(dev => dev.id === card.device_id).type
+    // console.log(type)
     // console.log(card.device_id)
     // console.log(device._devices.find(dev => dev.id === card.device_id).type)
     const [checked, setChecked] = React.useState(false);
@@ -39,7 +41,7 @@ const Widget = ({ card }) => {
     };
 
     switch (type) {
-        case "light":
+        case "Светильник":
             data = {
                 title: card.name,
                 isOn: {checked},
@@ -55,7 +57,7 @@ const Widget = ({ card }) => {
                 ),
             };
             break;
-        case "water":
+        case "Автополив":
             data = {
                 title: card.name,
                 isOn: {checked},
@@ -92,6 +94,6 @@ const Widget = ({ card }) => {
             </div>
         </div>
     );
-};
+});
 
 export default Widget;

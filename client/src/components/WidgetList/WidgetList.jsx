@@ -3,20 +3,20 @@ import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import Widget from '../Widgets/Widget.jsx'
 import Row from "react-bootstrap/Row";
-import {useNavigate} from "react-router-dom";
-import {CARD_ROUTE} from "../../utils/consts";
+import jwt_decode from "jwt-decode";
 
 const WidgetList = observer(() => {
     const {card} = useContext(Context)
-    // const history = useNavigate()
-    // console.log(history)
+    const token = localStorage.getItem("token")
 
     return (
-        <Row className="d-flex">
-            {/*<Row className="d-flex" onClick={() => history(CARD_ROUTE + '/' + card.id)}>*/}
+        <Row className="d-flex p-3">
             <>
-                {card._cards.map(card =>
-                    <Widget key={card.id} card={card}/>
+                {card._cards.map(card => {
+                    if (card.user_id === jwt_decode(token).id) {
+                        return <Widget key={card.id} card={card}/>
+                    }
+                }
                 )}
             </>
         </Row>
