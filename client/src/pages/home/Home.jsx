@@ -11,10 +11,11 @@ import {Context} from "../../index";
 import {fetchCards} from "../../http/cardAPI";
 import {fetchDevices} from "../../http/deviceAPI";
 import {fetchRooms} from "../../http/roomAPI";
-import {Button, Col, Container} from "react-bootstrap";
+import {Button, Col, Container, Form} from "react-bootstrap";
 import CreateDevice from "../../components/modals/CreateDevice.jsx";
 import CreateCard from "../../components/modals/CreateCard";
 import Row from "react-bootstrap/Row";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
 const Home = observer(() => {
     const {card} = useContext(Context)
@@ -30,13 +31,21 @@ const Home = observer(() => {
     const [cardVisible, setCardVisible] = useState(false)
     const [deviceVisible, setDeviceVisible] = useState(false)
 
-
     return (
         <div className="home">
             <Sidebar/>
             <div className="homeContainer">
                 <Navbar/>
-                <div className="addBar">
+                <div className="searchBar">
+                    <div className="search">
+                        <input
+                            type="text"
+                            placeholder="Поиск..."
+                            // value={value}
+                            // onChange={onChange()}
+                        />
+                        <SearchOutlinedIcon />
+                    </div>
                     <Button
                         // type='submit'
                         className = "buttonAdd"
@@ -62,11 +71,32 @@ const Home = observer(() => {
                         setDeviceVisible(false)
                     }}/>
                 </div>
-                {/*<Row>*/}
-                {/*    <Col md={9}>*/}
-                {/*        <WidgetList/>*/}
-                {/*    </Col>*/}
-                {/*</Row>*/}
+                <div className="addBar">
+                    {/*<Button*/}
+                    {/*    // type='submit'*/}
+                    {/*    className = "buttonAdd"*/}
+                    {/*    variant={"outline-success"}*/}
+                    {/*    // className={"mr-4"}*/}
+                    {/*    onClick={() => {setCardVisible(true)}}*/}
+                    {/*>*/}
+                    {/*    Добавить карточку*/}
+                    {/*</Button>*/}
+                    {/*<Button*/}
+                    {/*    // type='submit'*/}
+                    {/*    className = "buttonAdd"*/}
+                    {/*    variant={"outline-success"}*/}
+                    {/*    // className={"m-2"}*/}
+                    {/*    onClick={() => {setDeviceVisible(true)}}*/}
+                    {/*>*/}
+                    {/*    Добавить устройство*/}
+                    {/*</Button>*/}
+                    {/*<CreateCard show={cardVisible} onHide={() => {*/}
+                    {/*    setCardVisible(false)*/}
+                    {/*}}/>*/}
+                    {/*<CreateDevice show={deviceVisible} onHide={() => {*/}
+                    {/*    setDeviceVisible(false)*/}
+                    {/*}}/>*/}
+                </div>
                 <WidgetList/>
                 <div className="charts">
                     <Statistics title="Last 24 Hours" aspect={3 / 1}/>

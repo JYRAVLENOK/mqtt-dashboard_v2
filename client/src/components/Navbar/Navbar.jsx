@@ -22,15 +22,15 @@ const Navbar = observer(() => {
     return (
         <div className="navbar">
             <div className="wrapper">
-                <div className="search">
-                    <input
-                        type="text"
-                        placeholder="Поиск..."
-                        // value={value}
-                        // onChange={onChange()}
-                    />
-                    <SearchOutlinedIcon />
-                </div>
+                {/*<div className="search">*/}
+                {/*    <input*/}
+                {/*        type="text"*/}
+                {/*        placeholder="Поиск..."*/}
+                {/*        // value={value}*/}
+                {/*        // onChange={onChange()}*/}
+                {/*    />*/}
+                {/*    <SearchOutlinedIcon />*/}
+                {/*</div>*/}
                 <div className="items">
                     <div className="item">
                         <NotificationsNoneOutlinedIcon className="icon" />

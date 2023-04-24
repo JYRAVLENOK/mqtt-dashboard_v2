@@ -14,17 +14,56 @@
   .homeContainer {
     flex: 5;
 
-    .addBar{
-      display:flex;
+    //.addBar{
+    //  display:flex;
+    //  padding: 10px;
+    //  border-bottom: 0.5px solid rgb(231, 228, 228);
+    //
+    //  .buttonAdd{
+    //    //border-radius: 10px;
+    //    margin-right: 10px;
+    //    //position: fixed;
+    //    //right: 0;
+    //    //top: 0;
+    //  }
+    //}
+
+    .searchBar {
+      border-bottom: 3px solid rgb(231, 228, 228);
+      border-top: 3px solid rgb(231, 228, 228);
+      width: 100%;
       padding: 10px;
-      border-bottom: 0.5px solid rgb(231, 228, 228);
+      display: flex;
+      align-items: center;
+      justify-content: left;
 
       .buttonAdd{
         //border-radius: 10px;
-        margin-right: 10px;
+        margin-left: 10px;
         //position: fixed;
         //right: 0;
         //top: 0;
+      }
+
+      .search {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        border: 0.5px solid lightgray;
+        border-radius: 10px;
+        //background-color: #7451f8;
+        padding: 10px;
+
+        input {
+          border: none;
+          margin-top: 20px;
+          outline: none;
+          background: transparent;
+
+          &::placeholder {
+            font-size: 16px;
+          }
+        }
       }
     }
 
