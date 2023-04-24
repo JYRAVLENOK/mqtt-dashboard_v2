@@ -13,8 +13,10 @@ class CardController {
             const newCard = await Card.create({user_id, device_id, name, room_id, type})
             res.set({
                 "Access-Control-Allow-Origin" : "*",
-                "Access-Control-Allow-Credentials" : true
+                "Access-Control-Allow-Credentials" : true,
+                "Content-type": "application/json"
             })
+            // console.log(res.body)
             return res.json(newCard)
         } catch (e) {
             next(ApiError.badRequest(e.message))

@@ -2,7 +2,7 @@ const Router = require('express')
 const router = new Router()
 const cardController = require('../controller/card.controller')
 
-router.post('/card', cardController.createCard)
+router.post('/create', cardController.createCard)
 router.get('/card', cardController.getCards)
 // router.get('/card', (req, res) => {
 //     res.json({message: 'working'})

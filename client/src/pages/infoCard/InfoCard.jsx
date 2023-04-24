@@ -1,20 +1,26 @@
+import {useContext, useEffect} from "react";
+import {Context} from "../../index";
+import {deleteOneCard, fetchOneCard} from "../../http/cardAPI";
+import {Button} from "react-bootstrap";
+import {observer} from "mobx-react-lite";
 
-const InfoCard = () => {
-    // async function createCard() {
-    //     const response = await fetch('http://localhost:8080/api/card', {
-    //         mode: "no-cors",
-    //         method: "POST"
-    //     });
-    //     const jsonResponse = await response.json();
-    //     data = jsonResponse;
-    //     console.log(jsonResponse);
-    // }
+const InfoCard = observer(() => {
+    const {card} = useContext(Context)
+
+    useEffect(() => {
+        // fetchOneCard()
+    }, [])
+    const deleteCard = (event) => {
+        // deleteOneCard()
+    }
     return (
         <div>
-            <input placeholder="Название"/>
-            <input placeholder="Тип устройства"/>
+            <p>Название: </p>
+            <Button
+                onClick={deleteCard}
+            >Удалить</Button>
         </div>
     )
-}
+})
 
 export default InfoCard

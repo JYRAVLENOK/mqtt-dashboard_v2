@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {authRoutes, publicRoutes} from "../routes";
 import {
     Navigate,
@@ -6,49 +6,40 @@ import {
     BrowserRouter,
     Routes
 } from "react-router-dom";
-import {HOME_ROUTE, LOGIN_ROUTE, CARD_ROUTE, CARD_CREATE_ROUTE} from "../utils/consts";
-
-import Home from '../pages/home/Home'
-import Login from '../pages/login/Login'
-import CreateCard from '../pages/createCard/CreateCard'
+import {HOME_ROUTE} from "../utils/consts";
 import {Context} from "../index";
 import InfoCard from "../pages/infoCard/InfoCard";
+import {observer} from "mobx-react-lite";
 
-const AppRouter = () => {
+const AppRouter = observer(() => {
     const {user} = useContext(Context)
-    const {card} = useContext(Context)
+    // const {card} = useContext(Context)
+    // const isAuth = true
     console.log(user)
-    console.log(card)
+    // console.log(card)
+
     return (
         <div>
             <BrowserRouter>
-                {/*<Routes>*/}
-                {/*    {isAuth && authRoutes.map(({path, Component}) =>*/}
-                {/*        <Route key={path} path={path} component={Component} exact/>*/}
-                {/*    )}*/}
-                {/*    {publicRoutes.map(({path, Component}) =>*/}
-                {/*        <Route key={path} path={path} component={Component} exact/>*/}
-                {/*    )}*/}
-                {/*    <Navigate to={HOME_ROUTE}/>*/}
-                {/*</Routes>*/}
                 <Routes>
-                    <Route path={HOME_ROUTE}>
-                        <Route index element={<Home />}/>
-                    </Route>
-                    <Route path={LOGIN_ROUTE}>
-                        <Route index element={<Login/>}/>
-                    </Route>
-                    <Route path={CARD_ROUTE + '/:id'}>
-                        <Route index element={<InfoCard/>}/>
-                    </Route>
-                    <Route path={CARD_CREATE_ROUTE}>
-                        <Route index element={<CreateCard/>}/>
-                    </Route>
-                    {/*<Navigate to={HOME_ROUTE}/>*/}
+                    <>
+                        {user.isAuth && authRoutes.map(({path, Component}) =>
+                            <Route key={path} path={path} element={<Component/>} exact/>
+                        )}
+                    </>
+                    <>
+                        {publicRoutes.map(({path, Component}) =>
+                            <Route key={path} path={path} element={<Component/>} exact/>
+                        )}
+                    </>
+                    <Route path='*' element={<Navigate to={HOME_ROUTE}/>} />
+                    //TODO: доделать переадресацию с неверного адреса
+                    //TODO: переадресация с авторизации для авторизованных пользователей
+                    {/*<Route path="*" to={HOME_ROUTE}/>*/}
                 </Routes>
             </BrowserRouter>
         </div>
     );
-};
+})
 
 export default AppRouter;

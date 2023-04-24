@@ -34,7 +34,10 @@ class UserController {
     }
     async login(req, res, next) {
         const {username, password} = req.body
-        const user = await User.findOne({where: {username}})
+        const user = await User.findOne(
+            {
+                where: {username}
+            })
         if (!user) {
             return next(ApiError.internal('Пользователь с таким именем не найден!'))
         }
@@ -61,7 +64,7 @@ class UserController {
         const user = await db.query(`SELECT * FROM person where id = $1`, [id])
         res.json(user.rows[0])
     }
-    async check(req, res, next) {
+    async check(req, res) {
         const token = generateJWT(req.user.id, req.user.username, req.user.root)
         return res.json({token})
     }

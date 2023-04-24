@@ -12,7 +12,9 @@ const Device = sequelize.define('device', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     settings: {type: DataTypes.STRING},
     subscribe: {type: DataTypes.STRING},
-    publish: {type: DataTypes.STRING}
+    publish: {type: DataTypes.STRING},
+    type: {type: DataTypes.STRING},
+    name: {type: DataTypes.STRING, unique: true}
 })
 
 const Room = sequelize.define('room', {

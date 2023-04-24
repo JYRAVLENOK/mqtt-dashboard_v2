@@ -4,14 +4,21 @@ import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import Switch from '@mui/material/Switch';
 import WaterfallChartIcon from '@mui/icons-material/WaterfallChart';
 import {CARD_ROUTE} from "../../utils/consts";
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
+import {useContext} from "react";
+import {Context} from "../../index";
 
 var mqtt = require("mqtt")
 
 const Widget = ({ card }) => {
     const history = useNavigate()
+    const {device} = useContext(Context)
+
     let data;
-    let type = card.type
+    // let type = device._devices[card.device_id]
+    let type = device._devices.find(dev => dev.id === card.device_id).type
+    // console.log(card.device_id)
+    // console.log(device._devices.find(dev => dev.id === card.device_id).type)
     const [checked, setChecked] = React.useState(false);
     // var widgetClient = mqtt.connect("ws://192.168.1.7:9001/mqtt", client.client);
     const handleChange = (event) => {
@@ -77,7 +84,8 @@ const Widget = ({ card }) => {
                     onChange={handleChange}
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
-                <span className="link" onClick={() => history(CARD_ROUTE + '/' + card.id)}>Настройки</span>
+                {/*<span className="link" onClick={() => history(CARD_ROUTE + '/' + card.id)}>Настройки</span>*/}
+                <NavLink className="link" to={CARD_ROUTE + '/' + card.id}>Настройки</NavLink>
             </div>
             <div className="right">
                 {data.icon}

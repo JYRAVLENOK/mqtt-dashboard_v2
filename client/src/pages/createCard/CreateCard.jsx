@@ -1,91 +1,92 @@
 import {useContext, useEffect, useState} from "react";
 import {Context} from "../../index";
-import {createCard} from "../../http/cardAPI";
+import "./createCard.scss"
+import {createCard, fetchCards} from "../../http/cardAPI";
 //import {CardStore} from "../../store/CardStore"
-import {Form} from "react-bootstrap"
+import {Dropdown, Form} from "react-bootstrap"
+import jwt_decode from "jwt-decode"
+import {fetchDevices} from "../../http/deviceAPI";
+import {fetchRooms} from "../../http/roomAPI";
+import {observer} from "mobx-react-lite";
+import {Navigate, useNavigate} from "react-router-dom";
 
-const CreateCard = () => {
-    // async function createCard() {
-    //     const response = await fetch('http://localhost:8080/api/card', {
-    //         mode: "no-cors",
-    //         method: "POST"
-    //     });
-    //     const jsonResponse = await response.json();
-    //     data = jsonResponse;
-    //     console.log(jsonResponse);
-    // }
-
+const CreateCard = observer(() => {
     const {card} = useContext(Context)
-    const [userId, setUserID] = useState('')
-    const [deviceID, setDeviceID] = useState('')
+    const {device} = useContext(Context)
+    const {room} = useContext(Context)
+
+    const history = useNavigate()
+    const token = localStorage.getItem("token")
+
+    const [userId, setUserID] = useState(0)
+    const [deviceID, setDeviceID] = useState(0)
     const [name, setName] = useState('')
     const [RoomID, setRoomID] = useState('')
     const [type, setType] = useState('')
 
-
+    useEffect(() => {
+        fetchCards().then(data => card.setCard(data))
+        fetchDevices().then(data => device.setDevice(data))
+        fetchRooms().then(data => room.setRooms(data))
+    }, [])
 
     const addCard = () => {
         let data = {
-            user_id: 0,
-            device_id: 0,
-            name: '',
-            room_id: 0,
-            type: ''
+            user_id: jwt_decode(token).id,
+            device_id: device._selectedDevice.id,
+            name: name,
+            room_id: room._selectedRoom.id,
+            type: 'turn'
         }
-        data.user_id = userId
-        data.device_id = deviceID
-        data.name = name
-        data.room_id = RoomID
-        data.type = type
-
-        const formData = new FormData()
-        formData.append('user_id', `${userId}`)
-        formData.append('device_id', `${deviceID}`)
-        formData.append('name', `${name}`)
-        formData.append('room_id', `${RoomID}`)
-        formData.append('type', `${type}`)
-        console.log(formData)
-
-        // console.log(data)
-        // let json = JSON.stringify(data)
-        // // console.log(json)
-        // createCard(formData).then(data => CardStore.setCard(data))
+        console.log(data)
+        let json = JSON.stringify(data)
+        console.log(json)
+        createCard(json).then(data => {
+            history(-1)
+        })
     }
 
     return (
         <div>
-            <Form.Control
-                placeholder="Номер пользователя"
-                onChange={e => setUserID(Number(e.target.value))}
-                value={String(userId)}
-            />
-            <Form.Control
-                placeholder="Номер устройства"
-                onChange={e => setDeviceID(Number(e.target.value))}
-                value={String(deviceID)}
-            />
+            <Dropdown className="mt-2 mb-2">
+                <Dropdown.Toggle>{device._selectedDevice.name || "Выберите устройство"}</Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <>
+                        {device._devices.map(deviceMap =>
+                            <Dropdown.Item
+                                onClick={() => device.setSelectedDevice(deviceMap)}
+                                key={deviceMap.id}
+                            >
+                                    {deviceMap.name}
+                            </Dropdown.Item>
+                        )}
+                    </>
+                </Dropdown.Menu>
+            </Dropdown>
+
             <Form.Control
                 placeholder="Название"
                 onChange={e => setName(e.target.value)}
                 value={String(name)}
             />
-            <Form.Control
-                placeholder="Номер комнаты"
-                onChange={e => setRoomID(Number(e.target.value))}
-                value={String(RoomID)}
-            />
-            <select
-                size="1"
-                placeholder="Тип устройства"
-                onChange={e => setType(e.target.value)}
-                value={type}
-            >
-                <option>light</option>
-                <option>water</option>
-            </select>
+            <Dropdown className="mt-2 mb-2">
+                <Dropdown.Toggle>{room._selectedRoom.name || "Выберите комнату"}</Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <>
+                        {room._rooms.map(roomMap =>
+                                <Dropdown.Item
+                                    onClick={() => room.setSelectedRoom(roomMap)}
+                                    key={roomMap.id}
+                                >
+                                        {roomMap.name}
+                                </Dropdown.Item>
+                        )}
+                    </>
+                </Dropdown.Menu>
+            </Dropdown>
             <button type={"submit"} onClick={addCard}>Добавить</button>
         </div>
     )
-}
+})
 
 export default CreateCard
