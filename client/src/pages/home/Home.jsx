@@ -2,7 +2,7 @@ import "./home.scss"
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Navbar from "../../components/Navbar/Navbar";
 import Statistics from "../../components/Statistics/Statistics";
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useMemo} from "react";
 import { Navigate } from "react-router-dom";
 import {useEffect} from "react";
 import WidgetList from "../../components/WidgetList/WidgetList.jsx";
@@ -26,11 +26,19 @@ const Home = observer(() => {
         fetchCards().then(data => card.setCard(data))
         fetchDevices().then(data => device.setDevice(data))
         fetchRooms().then(data => room.setRooms(data))
-    })
+    }, [])
+    // зависимости?
 
     const [cardVisible, setCardVisible] = useState(false)
     const [deviceVisible, setDeviceVisible] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
 
+    const searchedCards = useMemo(() => {
+        return Object.values(card._cards).filter(post => post.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    }, [searchQuery])
+
+    // console.log(searchedCards)
+    // console.log(Object.values(card))
     return (
         <div className="home">
             <Sidebar/>
@@ -41,8 +49,8 @@ const Home = observer(() => {
                         <input
                             type="text"
                             placeholder="Поиск..."
-                            // value={value}
-                            // onChange={onChange()}
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
                         />
                         <SearchOutlinedIcon />
                     </div>
@@ -97,7 +105,9 @@ const Home = observer(() => {
                     {/*    setDeviceVisible(false)*/}
                     {/*}}/>*/}
                 </div>
-                <WidgetList/>
+                <WidgetList
+                    cards={searchedCards}
+                />
                 <div className="charts">
                     <Statistics title="Last 24 Hours" aspect={3 / 1}/>
                 </div>

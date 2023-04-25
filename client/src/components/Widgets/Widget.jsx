@@ -5,16 +5,21 @@ import Switch from '@mui/material/Switch';
 import WaterfallChartIcon from '@mui/icons-material/WaterfallChart';
 import {CARD_ROUTE} from "../../utils/consts";
 import {NavLink, useNavigate} from "react-router-dom";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
+import {fetchCards} from "../../http/cardAPI";
+import {fetchDevices} from "../../http/deviceAPI";
+import {fetchRooms} from "../../http/roomAPI";
 
 var mqtt = require("mqtt")
 
 const Widget = observer(({ card }) => {
     const history = useNavigate()
     const {device} = useContext(Context)
-
+    useEffect(() => {
+        fetchDevices().then(data => device.setDevice(data))
+    }, [])
     let data;
     // let type = device._devices[card.device_id]
     let type = device._devices.find(dev => dev.id === card.device_id).type
