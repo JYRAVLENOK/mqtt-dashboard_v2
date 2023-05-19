@@ -11,11 +11,17 @@ import {Context} from "../../index";
 import {fetchCards} from "../../http/cardAPI";
 import {fetchDevices} from "../../http/deviceAPI";
 import {fetchRooms} from "../../http/roomAPI";
-import {Button, Col, Container, Form} from "react-bootstrap";
+import {Button, Card, Col, Container, Form} from "react-bootstrap";
 import CreateDevice from "../../components/modals/CreateDevice.jsx";
 import CreateCard from "../../components/modals/CreateCard";
 import Row from "react-bootstrap/Row";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import jwt_decode from "jwt-decode";
+import Widget from "../../components/Widgets/Widget";
+import CreateRoom from "../../components/modals/CreateRoom";
 
 const Home = observer(() => {
     const {card} = useContext(Context)
@@ -23,20 +29,43 @@ const Home = observer(() => {
     const {room} = useContext(Context)
 
     useEffect(() => {
-        fetchCards().then(data => card.setCard(data))
         fetchDevices().then(data => device.setDevice(data))
         fetchRooms().then(data => room.setRooms(data))
+        fetchCards().then(data => card.setCard(data))
     }, [])
+
+    useEffect(() => {
+        fetchCards(room.selectedRoom.id).then(data => card.setCard(data))
+    }, [room._selectedRoom])
+    // useMemo(() => {
+    //     fetchDevices().then(data => device.setDevice(data))
+    //     fetchCards().then(data => card.setCard(data))
+    //     fetchRooms().then(data => room.setRooms(data))
+    // },[card._cards, device._devices, room._rooms])
+    //
     // зависимости?
+    // console.log(card._cards)
+    // console.log(device._devices)
+    // console.log(room._rooms)
 
     const [cardVisible, setCardVisible] = useState(false)
     const [deviceVisible, setDeviceVisible] = useState(false)
+    const [roomVisible, setRoomVisible] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
+
+    const [key, setKey] = useState('Все усутройства');
 
     const searchedCards = useMemo(() => {
         return Object.values(card._cards).filter(post => post.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    }, [searchQuery])
-
+    }, [searchQuery, card._cards])
+    // console.log(searchedCards)
+    // var now = new Date();
+    // console.log(now.getMinutes())
+    // const searchedDevices = useMemo(() => {
+    //     return Object.values(device._devices).filter(post => post.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    // }, [searchQuery, card._cards])
+    //
+    // const type = (JSON.parse(JSON.stringify(device._devices))).find(dev => dev.id === card.device_id).type || "Светильник"
     // console.log(searchedCards)
     // console.log(Object.values(card))
     return (
@@ -78,39 +107,94 @@ const Home = observer(() => {
                     <CreateDevice show={deviceVisible} onHide={() => {
                         setDeviceVisible(false)
                     }}/>
+                    <CreateRoom show={roomVisible} onHide={() => {
+                        setRoomVisible(false)
+                    }}/>
+
                 </div>
-                <div className="addBar">
-                    {/*<Button*/}
-                    {/*    // type='submit'*/}
-                    {/*    className = "buttonAdd"*/}
-                    {/*    variant={"outline-success"}*/}
-                    {/*    // className={"mr-4"}*/}
-                    {/*    onClick={() => {setCardVisible(true)}}*/}
+                <div className="roomBar">
+                    {/*<Tabs*/}
+                    {/*    // id="controlled-tab-example"*/}
+                    {/*    activeKey={key}*/}
+                    {/*    onSelect={(k) => setKey(k)}*/}
+                    {/*    className="mb-3"*/}
                     {/*>*/}
-                    {/*    Добавить карточку*/}
-                    {/*</Button>*/}
-                    {/*<Button*/}
-                    {/*    // type='submit'*/}
-                    {/*    className = "buttonAdd"*/}
-                    {/*    variant={"outline-success"}*/}
-                    {/*    // className={"m-2"}*/}
-                    {/*    onClick={() => {setDeviceVisible(true)}}*/}
+                    {/*    <>*/}
+                    {/*        {room._rooms.map(room => {*/}
+                    {/*                if (room.id === .id) {*/}
+                    {/*                    return <Widget*/}
+                    {/*                        key={card.id}*/}
+                    {/*                        card={card}*/}
+                    {/*                        device={(JSON.parse(JSON.stringify(devices))).find(dev => dev.id === card.device_id)}*/}
+                    {/*                    />*/}
+                    {/*                }*/}
+                    {/*            }*/}
+                    {/*        )}*/}
+                    {/*    </>*/}
+                    {/*    <Tab eventKey="Все устройства" title="Home">*/}
+                    {/*        <WidgetList*/}
+                    {/*            cards={searchedCards}*/}
+                    {/*            devices={device._devices}*/}
+                    {/*        />*/}
+                    {/*    </Tab>*/}
+                    {/*</Tabs>*/}
+                    {/*<Card*/}
+                    {/*    style={{cursor:'pointer'}}*/}
+                    {/*    className="roomButton"*/}
+                    {/*    onClick={() => room.setSelectedRoom('')}*/}
+                    {/*    border= {'light'}*/}
                     {/*>*/}
-                    {/*    Добавить устройство*/}
-                    {/*</Button>*/}
-                    {/*<CreateCard show={cardVisible} onHide={() => {*/}
-                    {/*    setCardVisible(false)*/}
-                    {/*}}/>*/}
-                    {/*<CreateDevice show={deviceVisible} onHide={() => {*/}
-                    {/*    setDeviceVisible(false)*/}
-                    {/*}}/>*/}
+                    {/*    Все карточки*/}
+                    {/*</Card>*/}
+                    <Button
+                        // type='submit'
+                        className = "roomButton"
+                        variant={"outline-secondary"}
+                        // className={"m-2"}
+                        onClick={() => room.setSelectedRoom('')}
+                    >
+                        Все карточки
+                    </Button>
+
+                    {room._rooms.map(roomMap =>
+                        // <Card
+                        //     style={{cursor:'pointer', marginLeft: '5px'}}
+                        //     key={roomMap.id}
+                        //     className="roomButton"
+                        //     onClick={() => room.setSelectedRoom(roomMap)}
+                        //     border= {'light'}
+                        // >
+                        //     {roomMap.name}
+                        // </Card>
+                        <Button
+                            // type='submit'
+                            className="roomButton"
+                            variant={"outline-secondary"}
+                            key={roomMap.id}
+                            // className={"m-2"}
+                            onClick={() => room.setSelectedRoom(roomMap)}
+                        >
+                            {roomMap.name}
+                        </Button>
+                    )}
+
+                    <Button
+                        // type='submit'
+                        className = "roomButton"
+                        variant={"outline-secondary"}
+                        // className={"m-2"}
+                        onClick={() => setRoomVisible(true)}
+                    >
+                        +
+                    </Button>
                 </div>
                 <WidgetList
                     cards={searchedCards}
+                    devices={device._devices}
                 />
-                <div className="charts">
-                    <Statistics title="Last 24 Hours" aspect={3 / 1}/>
-                </div>
+                {/*<div className="charts">*/}
+                {/*    <Statistics title="Last 24 Hours" aspect={4 / 1}/>*/}
+                {/*</div>*/}
             </div>
         </div>
         // <Container>

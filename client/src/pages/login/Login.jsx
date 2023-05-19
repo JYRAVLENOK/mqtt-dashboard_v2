@@ -79,9 +79,9 @@ const Login = observer(() => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <Row className="d-flex justify-content-between mt-3 pl-3 pr-3">
-                        <div className={"text-center mb-2"}>
-                            Нет аккаунта? <NavLink to={REGISTRATION_ROUTE}>Зарегистрируйтесь!</NavLink>
-                        </div>
+                        {/*<div className={"text-center mb-2"}>*/}
+                        {/*    Нет аккаунта? <NavLink to={REGISTRATION_ROUTE}>Зарегистрируйтесь!</NavLink>*/}
+                        {/*</div>*/}
                         <Button
                             variant={"outline-success"}
                             onClick={signIn}

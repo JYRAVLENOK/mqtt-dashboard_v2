@@ -1,32 +1,102 @@
 import "./widget.scss";
 import * as React from 'react'
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import Switch from '@mui/material/Switch';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+// import MeetingRoomIcon from '@mui/icons-material';
+import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import WaterfallChartIcon from '@mui/icons-material/WaterfallChart';
+import Switch from '@mui/material/Switch';
 import {CARD_ROUTE} from "../../utils/consts";
 import {NavLink, useNavigate} from "react-router-dom";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
-import {fetchCards} from "../../http/cardAPI";
-import {fetchDevices} from "../../http/deviceAPI";
+import {deleteOneCard, fetchCards} from "../../http/cardAPI";
+import {fetchDevices, fetchOneDevice} from "../../http/deviceAPI";
 import {fetchRooms} from "../../http/roomAPI";
+import Statistics from "../Statistics/Statistics";
 
 var mqtt = require("mqtt")
 
 const Widget = observer(({ card }) => {
-    const history = useNavigate()
-    const {device} = useContext(Context)
-    useEffect(() => {
-        fetchDevices().then(data => device.setDevice(data))
-    }, [])
-    let data;
-    // let type = device._devices[card.device_id]
-    let type = device._devices.find(dev => dev.id === card.device_id).type
-    // console.log(type)
+
+    const [checked, setChecked] = useState(false);
+    // const [statisticData, setStatisticData] = useState([])
+    const [device, setDevice] = useState({})
+    // const {device} = useContext(Context)
+
     // console.log(card.device_id)
-    // console.log(device._devices.find(dev => dev.id === card.device_id).type)
-    const [checked, setChecked] = React.useState(false);
+    // useEffect(() => {
+    //     fetchOneDevice(card.device_id).then(data => {
+    //         // setDev(data)
+    //         console.log(data)
+    //         device.setSelectedDevice(data)
+    //         console.log(device._selectedDevice)
+    //     })
+    // },[])
+    useEffect(() => {
+        fetchDevices().then(data => {
+            // setDev(data)
+            console.log(data)
+            data.map(deviceMap => {
+                if (deviceMap.id === card.device_id) {
+                    setDevice(deviceMap)
+                }
+            })
+            console.log(device)
+        })
+    },[])
+    let data
+    // console.log(device._selectedDevice)
+    // console.log(dev)
+    if (device) {
+        data = {
+            title: card.name,
+            isOn: {checked},
+            settings: device.settings,
+            type: device.type,
+            icon: '',
+            content: '',
+            typeCard: card.type
+        }
+    } else {
+        data = {
+            title: card.name,
+            isOn: {checked},
+            settings: '0/0/0/0/0',
+            type: " ",
+            icon: '',
+            content: '',
+            typeCard: card.type
+        }
+    }
+    // if (device._selectedDevice) {
+    //     data = {
+    //         title: card.name,
+    //         isOn: {checked},
+    //         settings: device._selectedDevice.settings,
+    //         type: device._selectedDevice.type,
+    //         icon: '',
+    //         content: '',
+    //         typeCard: card.type
+    //     }
+    // } else {
+    //     data = {
+    //         title: card.name,
+    //         isOn: {checked},
+    //         settings: '0/0/0/0/0',
+    //         type: " ",
+    //         icon: '',
+    //         content: '',
+    //         typeCard: card.type
+    //     }
+    // }
+
+    // console.log(data.settings)
+    const readySettings = data.settings?.split('/');
+    const statisticData = device.history?.split(' ');
+    // console.log(statisticData)
+    // console.log(JSON.parse(JSON.stringify(device._selectedDevice)).settings)
     // var widgetClient = mqtt.connect("ws://192.168.1.7:9001/mqtt", client.client);
     const handleChange = (event) => {
         setChecked(event.target.checked);
@@ -42,63 +112,128 @@ const Widget = observer(({ card }) => {
             default:
                 break;
         }
-
     };
-
-    switch (type) {
+    // console.log(data.type)
+    switch (data.type) {
         case "Светильник":
-            data = {
-                title: card.name,
-                isOn: {checked},
-                link: "Настройки",
-                icon: (
-                    <LightbulbIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(218, 165, 32, 0.2)",
-                            color: "goldenrod",
-                        }}
-                    />
-                ),
-            };
+            data.content = (
+                <div className="center">
+                    <div className="content">
+                        Яркость: {readySettings[1]} %
+                    </div>
+                    <div className="content">
+                        Цвет: <div className="circle" style={{backgroundColor: readySettings[2]}}/>
+                    </div>
+                </div>
+            )
+            data.icon = (
+                <LightbulbIcon
+                    className="icon"
+                    style={{
+                        color: card.color,
+                        backgroundColor: card.color + '33',
+                    }}
+                />
+            )
             break;
         case "Автополив":
-            data = {
-                title: card.name,
-                isOn: {checked},
-                link: "Настройки",
-                icon: (
-                    <WaterfallChartIcon
-                        className="icon"
-                        style={{
-                            color: "darkblue",
-                            backgroundColor: "rgba(0, 0, 255, 0.2)",
-                        }}
-                    />
-                ),
-            };
+            data.content = (
+                <div className="center">
+                    <div className="content">
+                        Влажность: {readySettings[1]} %
+                    </div>
+                    <div className="content">
+                        Расписание: каждые {readySettings[3]} дня
+                    </div>
+                    <div className="content">
+                        Объем: {readySettings[2]} мл.
+                    </div>
+                </div>
+            )
+            data.icon = (
+                <WaterfallChartIcon
+                    className="icon"
+                    style={{
+                        color: card.color,
+                        backgroundColor: card.color + '33',
+                    }}
+                />
+            )
+            break;
+        case "Дверь":
+            data.content = (<div/>)
+            data.icon = (
+                <MeetingRoomIcon
+                    className="icon"
+                    style={{
+                        color: card.color,
+                        backgroundColor: card.color + '33',
+                    }}
+                />
+            )
+            break;
+        case "Кормушка":
+            data.content = (
+                <div className="center">
+                    {/*<div className="content">*/}
+                    {/*    Порция: {readySettings[1]} г.*/}
+                    {/*</div>*/}
+                    {/*<div className="content">*/}
+                    {/*    Расписание: через каждые {readySettings[2]} часа*/}
+                    {/*</div>*/}
+                    {/*<div className="content">*/}
+                    {/*    Заполн.: {readySettings[3]} %*/}
+                    {/*</div>*/}
+                    <div className="content">
+                        Порция: {readySettings[1]} г.
+                    </div>
+                    <div className="content">
+                        Расписание: через каждые 3 часа
+                    </div>
+                    <div className="content">
+                        Заполн.: {readySettings[3]} %
+                    </div>
+                </div>
+            )
+            data.icon = (
+                <LocalDiningIcon
+                    className="icon"
+                    style={{
+                        color: card.color,
+                        backgroundColor: card.color + '33',
+                    }}
+                />
+            )
             break;
         default:
             break;
     }
-
-    return (
-        <div className="widget">
-            <div className="left">
-                <span className="title">{data.title}</span>
-                <Switch
-                    checked={checked}
-                    onChange={handleChange}
-                    inputProps={{ 'aria-label': 'controlled' }}
-                />
-                {/*<span className="link" onClick={() => history(CARD_ROUTE + '/' + card.id)}>Настройки</span>*/}
-                <NavLink className="link" to={CARD_ROUTE + '/' + card.id}>Настройки</NavLink>
+    // console.log(data)
+    if (data.typeCard === 'statistic')  {
+        return (
+            <Statistics type={data.type} title={data.title} data={statisticData} aspect={4 / 1}/>
+        )
+    } else {
+        return (
+            <div className="widget">
+                <div className="left">
+                    <span className="title">{data.title}</span>
+                    <Switch
+                        checked={checked}
+                        onChange={handleChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
+                    <NavLink className="link" to={CARD_ROUTE + '/' + card.id}>Настройки</NavLink>
+                </div>
+                <div className="right">
+                    {data.content}
+                    <div className="icon">
+                        {data.icon}
+                    </div>
+                </div>
             </div>
-            <div className="right">
-                {data.icon}
-            </div>
-        </div>
-    );
+        )
+    }
 });
 
 export default Widget;

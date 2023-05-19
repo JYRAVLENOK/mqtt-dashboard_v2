@@ -1,7 +1,12 @@
 import {$host} from "./index"
 
 export const createRoom = async (room) => {
-    const {data} = await $host.post('api/room/room', room)
+    const {data} = await $host.post('api/room/room', room, {
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    })
     //console.log(data)
     return data
 }

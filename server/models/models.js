@@ -14,7 +14,8 @@ const Device = sequelize.define('device', {
     subscribe: {type: DataTypes.STRING},
     publish: {type: DataTypes.STRING},
     type: {type: DataTypes.STRING},
-    name: {type: DataTypes.STRING, unique: true}
+    name: {type: DataTypes.STRING, unique: true},
+    history: {type: DataTypes.STRING}
 })
 
 const Room = sequelize.define('room', {
@@ -28,7 +29,8 @@ const Card = sequelize.define('card', {
     device_id: {type: DataTypes.INTEGER},
     name: {type: DataTypes.STRING, unique: true},
     room_id: {type: DataTypes.INTEGER},
-    type: {type: DataTypes.STRING}
+    type: {type: DataTypes.STRING},
+    color: {type: DataTypes.STRING}
 })
 
 User.hasMany(Card)

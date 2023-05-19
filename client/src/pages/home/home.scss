@@ -13,6 +13,7 @@
 
   .homeContainer {
     flex: 5;
+    //margin-left: 10px;
 
     //.addBar{
     //  display:flex;
@@ -27,7 +28,20 @@
     //    //top: 0;
     //  }
     //}
+    .roomBar {
+      border-bottom: 3px solid rgb(231, 228, 228);
+      border-top: 3px solid rgb(231, 228, 228);
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: left;
 
+      .roomButton {
+        margin-right: 10px;
+        //padding: 10px;
+      }
+    }
     .searchBar {
       border-bottom: 3px solid rgb(231, 228, 228);
       border-top: 3px solid rgb(231, 228, 228);
@@ -40,6 +54,7 @@
       .buttonAdd{
         //border-radius: 10px;
         margin-left: 10px;
+        //margin-right: 10px;
         //position: fixed;
         //right: 0;
         //top: 0;

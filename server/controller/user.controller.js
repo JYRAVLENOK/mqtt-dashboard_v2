@@ -59,11 +59,11 @@ class UserController {
         const users = await User.findAll()
         return res.json(users)
     }
-    async getOneUser(req, res) {
-        const id = req.params.id
-        const user = await db.query(`SELECT * FROM person where id = $1`, [id])
-        res.json(user.rows[0])
-    }
+    // async getOneUser(req, res) {
+    //     const id = req.params.id
+    //     const user = await db.query(`SELECT * FROM person where id = $1`, [id])
+    //     res.json(user.rows[0])
+    // }
     async check(req, res) {
         const token = generateJWT(req.user.id, req.user.username, req.user.root)
         return res.json({token})
@@ -77,9 +77,12 @@ class UserController {
         res.json(user.rows[0])
     }
     async deleteUser(req, res) {
-        const id = req.params.id
-        const user = await db.query(`DELETE FROM person where id = $1`, [id])
-        res.json(user.rows[0])
+        const {id} = req.params
+        // const device = await db.query(`DELETE FROM device where id = $1`, [id])
+        const device = await User.destroy({
+            where: {id}
+        })
+        return res.json(device)
     }
 }
 

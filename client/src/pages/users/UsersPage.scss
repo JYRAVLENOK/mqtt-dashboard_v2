@@ -1,0 +1,39 @@
+.usersPage {
+  display: flex;
+  flex-direction: row;
+
+  .users {
+    flex: 5;
+
+    .user {
+      display: flex;
+      justify-content: space-between;
+      //flex: 1;
+      margin: 10px;
+      padding: 10px;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      border-radius: 10px;
+      //height: 130px;
+    }
+
+    .searchBar {
+      border-bottom: 3px solid rgb(231, 228, 228);
+      border-top: 3px solid rgb(231, 228, 228);
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: left;
+
+      .buttonAdd {
+        //border-radius: 10px;
+        margin-left: 10px;
+        //margin-right: 10px;
+        //position: fixed;
+        //right: 0;
+        //top: 0;
+      }
+    }
+  }
+}

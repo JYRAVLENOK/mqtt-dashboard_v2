@@ -1,15 +1,11 @@
-// const db = require('../db')
 const {Device} = require('../models/models')
 const ApiError = require('../error/ApiError')
 
 class DeviceController {
     async createDevice(req, res, next) {
-        // const {settings, subscribe, publish} = req.body
-        // const newDevice = await db.query(`INSERT INTO device (settings, subscribe, publish) values ($1, $2, $3) RETURNING *`, [settings, subscribe, publish])
-        // res.json(newDevice.rows[0])
         try {
-            const {settings, subscribe, publish, type, name} = req.body
-            const newDevice = await Device.create({settings, subscribe, publish, type, name})
+            const {settings, subscribe, publish, type, name, history} = req.body
+            const newDevice = await Device.create({settings, subscribe, publish, type, name, history})
             return res.json(newDevice)
         } catch (e) {
             next(ApiError.badRequest(e.message))
@@ -17,10 +13,21 @@ class DeviceController {
 
     }
     async getDevice(req, res) {
-        // const devices = await db.query(`SELECT * FROM device`)
-        // res.json(devices.rows)
         const devices = await Device.findAll()
         return res.json(devices)
+    }
+    async updateDeviceBySub(req, res) {
+        const {subscribe} = req.params
+        const {settings} = req.body
+        const device = await Device.update(
+            {
+                settings: settings
+            },
+            {
+                where: {subscribe}
+            }
+        )
+        return res.json(device)
     }
     async getOneDevice(req, res) {
         // const id = req.params.id
@@ -36,7 +43,8 @@ class DeviceController {
     }
     async updateDevice(req, res) {
         const {id} = req.params
-        const {settings, subscribe, publish, type, name} = req.body
+        console.log(req.body)
+        const {settings, subscribe, publish, type, name, history} = req.body
         // const device = await db.query(`UPDATE device set settings = $1, subscribe = $2, publish = $3 where id = $4 RETURNING *`,
         //     [settings, subscribe, publish, id]
         // )
@@ -46,7 +54,8 @@ class DeviceController {
                 subscribe: subscribe,
                 publish: publish,
                 type: type,
-                name: name
+                name: name,
+                history: history
             },
             {
                 where: {id}

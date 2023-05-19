@@ -8,5 +8,6 @@ router.get('/card', cardController.getCards)
 router.get('/card/:id', cardController.getOneCard)
 router.put('/card', cardController.updateCard)
 router.delete('/card/:id', cardController.deleteCard)
+router.delete('/card', cardController.deleteCards)
 
 module.exports = router

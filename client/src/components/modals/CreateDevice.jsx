@@ -12,15 +12,19 @@ const CreateDevice = observer(({show, onHide}) => {
 
     const addDevice = () => {
         let data = {
-            "settings": '',
-            "subscribe": device._selectedType.path,
-            "publish": device._selectedType.path,
-            "type": device._selectedType.name,
-            "name": name
+            settings: '0/0/0/0/0',
+            subscribe: device._selectedType.path,
+            publish: device._selectedType.path,
+            type: device._selectedType.name,
+            name: name
         }
         let json = JSON.stringify(data)
-        console.log(json)
-        createDevice(json).then(data => onHide())
+        // console.log(json)
+        createDevice(json).then(data => {
+            setName('')
+            device.setSelectedType({})
+            onHide()
+        })
     }
     return (
         <Modal
