@@ -1,3 +1,18 @@
+// Copyright 2023 Alexandr Vasilev
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import {Context} from "../../index";
 import {deleteOneCard, fetchOneCard} from "../../http/cardAPI";
@@ -24,18 +39,29 @@ const InfoCard = observer(() => {
     const [room, setRoom] = useState([])
     const [device, setDevice] = useState({settings: '0/0/0/0'})
     let icon, values
+    // let readySettings = Object.values(device.settings?.split('/'))
 
     useEffect(() => {
         fetchOneCard(id).then(data => {
             setCard(data)
             return data
         }).then(data => {
-            fetchOneDevice(data.device_id).then(data => setDevice(data))
+            fetchOneDevice(data.device_id).then(data => {
+                setDevice(data)
+                // console.log(device)
+                // console.log(device.settings?.split('/'))
+                // readySettings = Object.values(device.settings?.split('/'))
+                // console.log(readySettings)
+            })
             fetchOneRoom(data.room_id).then(data => setRoom(data))
         })
     }, [])
-    const readySettings = device.settings?.split('/');
-    // console.log(readySettings)
+    const readySettings = useMemo(() => {
+        return Object.values(device.settings?.split('/'))
+    }, [device])
+
+    console.log(typeof(readySettings))
+    console.log(readySettings)
     const [color, setColor] = useState(readySettings[2])
     const [createValue, setCreateValue] = useState({
         // color: readySettings[2],
@@ -44,7 +70,7 @@ const InfoCard = observer(() => {
         food: readySettings[2],
         frequency: readySettings[3]
     })
-
+    console.log(createValue)
     const handleChange = e => {
         const fieldName = e.target.name;
         // console.log(fieldName)
@@ -107,6 +133,7 @@ const InfoCard = observer(() => {
                     <Form>
                         <Form.Control
                             placeholder="Яркость"
+                            // placeholder={createValue.bright}
                             onChange={handleChange}
                             name='bright'
                             value={String(createValue.bright)}

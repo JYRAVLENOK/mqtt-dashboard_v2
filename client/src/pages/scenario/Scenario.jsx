@@ -13,27 +13,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-.infoCard {
-  display: flex;
-  flex-direction: row;
+import React from 'react';
+import Sidebar from "../../components/Sidebar/Sidebar";
+import Navbar from "../../components/Navbar/Navbar";
+import "./scenario.scss"
+import {Button} from "react-bootstrap";
+import ConfirmDeleteCard from "../../components/modals/ConfirmDeleteCard";
 
-  .info {
-    flex: 5;
+const Scenario = () => {
+    return (
+        <div className="scenario">
+            <Sidebar/>
+            <div className="page">
+                <Navbar/>
+                SCENARIO
+            </div>
+        </div>
+    )
+};
 
-    .buttonAdd {
-      margin-top: 10px;
-      margin-left: 10px;
-    }
-    //.device {
-    //  display: flex;
-    //  justify-content: space-between;
-    //  //flex: 1;
-    //  margin: 10px;
-    //  padding: 10px;
-    //  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-    //  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-    //  border-radius: 10px;
-    //  //height: 130px;
-    //}
-  }
-}
+export default Scenario;

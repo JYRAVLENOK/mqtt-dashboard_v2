@@ -12,12 +12,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
-
-.infoCard {
+.scenario {
   display: flex;
   flex-direction: row;
 
-  .info {
+  .page {
     flex: 5;
 
     .buttonAdd {
